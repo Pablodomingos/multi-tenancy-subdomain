@@ -1,0 +1,12 @@
+{
+    "connections": [
+        {
+            "name": "dev",
+            "command": "php artisan tinker"
+        },
+        {
+            "name": "docker",
+            "command": "sail artisan tinker"
+        }
+    ]
+}
