@@ -35,9 +35,6 @@ class UserController extends Controller
 
         try {
             $attributes = Arr::only($data, $this->user->getFillableColumns());
-            /** @var Tenant $tenent */
-            $tenent = $this->tenant->newQuery()->firstOrFail();
-            $attributes['tenant_id'] = $tenent->id;
             $user = $this->user->newQuery()->create($attributes);
             $token = $user->createToken('auth_token');
 
@@ -49,9 +46,8 @@ class UserController extends Controller
         } catch (\Throwable $e) {
             return response()->json([
                 'message' => $e->getMessage()
-            ], $e->getCode());
+            ], Response::HTTP_NOT_FOUND);
         }
-
     }
 
     public function show(int $id)
