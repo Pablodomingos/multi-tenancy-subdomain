@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\{
+    PostController,
     TenantController,
     UserController
 };
@@ -23,22 +24,25 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::post('/tenant', [TenantController::class, 'store']);
 
     Route::middleware('tenant')->group(function () {
-        //TEST ROUTE
-        Route::get('/', function () {
-            return response()->json([
-                'message' => 'This is your api route.'
-            ]);
+        Route::group([
+            'prefix' => 'tenant',
+            'controller' => TenantController::class
+        ], function () {
+            Route::get('/', 'index');
+            Route::post('/', 'store');
+            Route::get('/{id}', 'show');
+            Route::put('/{id}', 'update');
+            Route::delete('/{id}', 'destroy');
         });
 
         Route::group([
-            'prefix' => 'tenant',
-            'controller' => TenantController::class,
-            'id' => '^[0-9]+$'
+            'prefix' => 'post',
+            'controller' => PostController::class
         ], function () {
             Route::get('/', 'index');
+            Route::post('/', 'store');
             Route::get('/{id}', 'show');
             Route::put('/{id}', 'update');
             Route::delete('/{id}', 'destroy');
