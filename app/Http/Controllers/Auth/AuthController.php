@@ -19,7 +19,7 @@ class AuthController extends Controller
     {
     }
 
-    public function logout(Request $request): JsonResponse
+    public function logout(): JsonResponse
     {
         if (auth()->check()) {
             Auth::user()->tokens()->delete();
