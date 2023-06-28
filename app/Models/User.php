@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
+use App\Observers\ModelObserver;
 use App\Traits\FillableColumns;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -65,6 +64,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public static function booted()
+    {
+        static::addGlobalScope(new Scopes\TenantScope());
+        static::observe(ModelObserver::class);
+    }
 
     public function posts(): HasMany
     {

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Observers\ModelObserver;
 use App\Traits\FillableColumns;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,6 +42,12 @@ class Post extends Model
         'created_at',
         'updated_at',
     ];
+
+    public static function booted()
+    {
+        static::addGlobalScope(new Scopes\TenantScope());
+        static::observe(ModelObserver::class);
+    }
 
     public function author(): BelongsTo
     {
