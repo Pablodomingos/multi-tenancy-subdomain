@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/register', [UserController::class, 'store']);
+Route::post('/register', [UserController::class, 'store'])->middleware('not_subdomain_main');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('tenant')->group(function () {
         Route::group([
             'prefix' => 'tenant',
+            'middleware' => 'subdomain_main',
             'controller' => TenantController::class
         ], function () {
             Route::get('/', 'index');

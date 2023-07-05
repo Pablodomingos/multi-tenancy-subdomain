@@ -10,7 +10,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TenantSubdomain
 {
-    public function handle(Request $request, Closure $next): Response
+    /**
+     * @throws NotFoundCustomException
+     */
+    public function handle(Request $request, Closure $next): mixed
     {
         $tenant = app(ManagerTenant::class)->tenant();
 

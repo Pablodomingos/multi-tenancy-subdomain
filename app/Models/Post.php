@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Observers\ModelObserver;
 use App\Traits\FillableColumns;
+use App\Traits\ModelBooted;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -35,19 +36,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Post extends Model
 {
-    use HasFactory, FillableColumns;
+    use HasFactory, FillableColumns, ModelBooted;
 
     protected $guarded = [
         'id',
         'created_at',
         'updated_at',
     ];
-
-    public static function booted()
-    {
-        static::addGlobalScope(new Scopes\TenantScope());
-        static::observe(ModelObserver::class);
-    }
 
     public function author(): BelongsTo
     {

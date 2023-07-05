@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Observers\ModelObserver;
 use App\Traits\FillableColumns;
+use App\Traits\ModelBooted;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -47,7 +48,7 @@ use Laravel\Sanctum\HasApiTokens;
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, FillableColumns;
+    use HasApiTokens, HasFactory, Notifiable, FillableColumns, ModelBooted;
 
     protected $guarded = [
         'id',
@@ -64,12 +65,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-
-    public static function booted()
-    {
-        static::addGlobalScope(new Scopes\TenantScope());
-        static::observe(ModelObserver::class);
-    }
 
     public function posts(): HasMany
     {

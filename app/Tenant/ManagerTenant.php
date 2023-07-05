@@ -20,11 +20,19 @@ class ManagerTenant
 
     public function tenant(): ?Tenant
     {
-        return $this->tenant->where('subdomain', '=', $this->subdomain())->first();
+        return $this->tenant->newQuery()
+            ->where('subdomain', '=', $this->subdomain())
+            ->first();
     }
 
     public function identify(): int|string|null
     {
         return $this->tenant()->id;
+    }
+
+    public function isSubDomainMain(): bool
+    {
+        $subdomain = $this->subdomain();
+        return $subdomain == config('tenant.subdomain_main');
     }
 }

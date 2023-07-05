@@ -70,6 +70,10 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'tenant' => \App\Http\Middleware\Tenant\TenantSubdomain::class//TODO:Provisório
+
+        //Custom middleware
+        'tenant' => \App\Http\Middleware\Tenant\TenantSubdomain::class,//TODO:Provisório
+        'subdomain_main' => \App\Http\Middleware\Tenant\CheckSubDomainMain::class,
+        'not_subdomain_main' => \App\Http\Middleware\Tenant\CheckNotSubDomainMain::class,
     ];
 }

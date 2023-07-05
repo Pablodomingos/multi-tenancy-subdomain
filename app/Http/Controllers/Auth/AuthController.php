@@ -10,11 +10,12 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class AuthController extends Controller
 {
     public function __construct(
-        private User $user
+        private readonly User $user
     )
     {
     }
@@ -25,10 +26,13 @@ class AuthController extends Controller
             Auth::user()->tokens()->delete();
         }
 
-        return response()->json('', Response::HTTP_NO_CONTENT);
+        return response()->json('', ResponseAlias::HTTP_NO_CONTENT);
     }
 
-    public function login(Request $request)
+    /**
+     * @throws UnauthorizedCustomException
+     */
+    public function login(Request $request): JsonResponse
     {
         /** @var User $user */
         $user = $this->user->newQuery()->where('email', '=', Str::lower($request->email))->first();

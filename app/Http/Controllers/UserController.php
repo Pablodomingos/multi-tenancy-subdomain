@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
+use Throwable;
 
 class UserController extends Controller
 {
     public function __construct(
-        private User $user,
-        private Tenant $tenant
+        private readonly User $user
     )
     {
     }
@@ -42,22 +41,22 @@ class UserController extends Controller
                 'access_token' => $token->plainTextToken,
                 'token_type' => 'Bearer',
                 'user' => $user
-            ], Response::HTTP_CREATED);
-        } catch (\Throwable $e) {
+            ], ResponseAlias::HTTP_CREATED);
+        } catch (Throwable $e) {
             return response()->json([
                 'message' => $e->getMessage()
-            ], Response::HTTP_NOT_FOUND);
+            ], ResponseAlias::HTTP_NOT_FOUND);
         }
     }
 
-    public function show(int $id)
+    public function show(int $id): JsonResponse
     {
         return response()->json(
             $this->user->newQuery()->findOrFail($id)
         );
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, int $id): JsonResponse
     {
         $data = $request->validate([
             'name' => 'sometimes|string|max:255',
@@ -73,14 +72,14 @@ class UserController extends Controller
             return response()->json(
                 $user
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return response()->json([
                 'message' => $e->getMessage()
             ], $e->getCode());
         }
     }
 
-    public function destroy(int $id)
+    public function destroy(int $id): JsonResponse
     {
         return response()->json(
             $this->user->newQuery()
